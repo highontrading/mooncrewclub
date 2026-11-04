@@ -81,9 +81,25 @@ section{padding:120px 0}
 .price .p{font-family:'Cormorant Garamond',serif;font-size:34px}
 .price small{display:block;color:var(--quiet);font-size:14px}
 /* gallery */
-.gallery{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0}
-.gallery img{width:100%;aspect-ratio:4/5;object-fit:cover}
-@media (max-width:800px){.gallery{grid-template-columns:repeat(3,1fr)}.gallery img:nth-child(n+4){display:none}}
+.gal{padding-top:110px}
+.g-filter{display:flex;gap:8px;margin:28px 0 24px;flex-wrap:wrap}
+.g-filter button{min-height:44px;padding:0 20px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--quiet);font:inherit;font-size:14px;font-weight:600;letter-spacing:.06em;cursor:pointer}
+.g-filter button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.g-grid{columns:3;column-gap:12px}
+@media (max-width:900px){.g-grid{columns:2;column-gap:8px}}
+.g-item{display:block;width:100%;margin:0 0 12px;padding:0;border:0;background:none;cursor:zoom-in;break-inside:avoid;overflow:hidden;border-radius:3px}
+@media (max-width:900px){.g-item{margin-bottom:8px}}
+.g-item img{width:100%;height:auto;transition:transform .5s ease}
+.g-item:hover img{transform:scale(1.03)}
+.g-item:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.g-item.hide{display:none}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,10,11,.96);display:flex;align-items:center;justify-content:center}
+.lb[hidden]{display:none}
+.lb img{max-width:92vw;max-height:88vh;object-fit:contain}
+.lb button{position:absolute;background:none;border:0;color:var(--ink);font-size:44px;line-height:1;cursor:pointer;min-width:56px;min-height:56px}
+.lb-x{top:14px;right:16px}
+.lb-prev{left:8px;top:50%;transform:translateY(-50%)}
+.lb-next{right:8px;top:50%;transform:translateY(-50%)}
 /* how */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:48px;counter-reset:s}
 @media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
@@ -137,6 +153,7 @@ footer a{color:var(--ink)}
       <a href="#crew">The crew</a>
       <a href="#nye">NYE 2026</a>
       <a href="#how">How it works</a>
+      <a href="#gallery">Gallery</a>
       <a href="#faq">FAQ</a>
       <a class="btn" href="#apply">Apply</a>
     </nav>
@@ -224,12 +241,22 @@ footer a{color:var(--ink)}
   </div>
 </section>
 
-<div class="gallery" aria-label="Moments from Koh Phangan">
-  <img src="img/night.jpg" alt="Dancers under red light and a blue spotlight" loading="lazy">
-  <img src="img/pool.jpg" alt="An infinity pool overlooking a calm bay" loading="lazy">
-  <img src="img/ocean.jpg" alt="Turquoise sea near the shore" loading="lazy">
-  <img src="img/palms.jpg" alt="Tall palms against a blue sky with a daytime moon" loading="lazy">
-  <img src="img/interior.jpg" alt="A sculpted white interior with rattan and rope" loading="lazy">
+<section id="gallery" class="gal">
+  <div class="wrap">
+    <div class="eyebrow">Gallery</div>
+    <h2 style="margin-top:16px">Nights with the crew. <em>Days in between.</em></h2>
+    <p class="lead" style="max-width:640px">Some of the nights and places we've shared with our crews in Koh Phangan.</p>
+    <div class="g-filter" role="group" aria-label="Filter photos">
+      <button type="button" class="on" data-f="all">All</button><button type="button" data-f="night">Nights</button><button type="button" data-f="day">Days</button>
+    </div>
+    <div class="g-grid" id="g-grid"><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-fire.jpg" alt="Flames and hands in the air at a Koh Phangan party" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-pool.jpg" alt="An infinity pool overlooking a calm bay" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-crowd-blue.jpg" alt="A packed dance floor under blue stage lights" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-palms.jpg" alt="Tall palms against a blue sky with a daytime moon" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-sparklers.jpg" alt="Sparkler fountains over a jungle dance floor" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-road.jpg" alt="A scooter on a coastal road down to the sea" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-dancefloor.jpg" alt="Dancers under red light and a blue spotlight" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-living.jpg" alt="A villa living room opening onto a pool and jungle hill" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-lasers.jpg" alt="Laser beams over a huge outdoor crowd" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-ocean.jpg" alt="Turquoise sea near the shore" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-bar.jpg" alt="A busy party bar at night" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-interior.jpg" alt="A sculpted white interior with rattan and rope" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-haze.jpg" alt="Purple haze over a late-night crowd" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-palm.jpg" alt="A lone palm leaning into a teal sky" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-stage.jpg" alt="A giant creature-shaped stage lit up at night" loading="lazy"></button><button class="g-item" data-k="day" type="button"><img src="img/gallery/d-bedroom.jpg" alt="A villa bedroom with a carved wooden bed" loading="lazy"></button><button class="g-item" data-k="night" type="button"><img src="img/gallery/n-lights.jpg" alt="Friends at tables under neon party lights" loading="lazy"></button></div>
+  </div>
+</section>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lb-x" id="lb-x" type="button" aria-label="Close">×</button>
+  <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous photo">‹</button>
+  <img id="lb-img" alt="">
+  <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next photo">›</button>
 </div>
 
 <section id="how">
@@ -357,6 +384,21 @@ var CONFIG = {
     try{navigator.clipboard.writeText(t).then(function(){out.textContent='Copied';},function(){sel();});}catch(e){sel();}
     function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('msgtxt'));var g=window.getSelection();g.removeAllRanges();g.addRange(r);out.textContent='Selected, now copy it';}
   });
+  // gallery filter + lightbox
+  var grid=document.getElementById('g-grid'), items=[].slice.call(grid.querySelectorAll('.g-item'));
+  document.querySelectorAll('.g-filter button').forEach(function(b){b.addEventListener('click',function(){
+    document.querySelectorAll('.g-filter button').forEach(function(x){x.classList.toggle('on',x===b);});
+    var f=b.getAttribute('data-f'); items.forEach(function(it){it.classList.toggle('hide',f!=='all'&&it.getAttribute('data-k')!==f);});});});
+  var lb=document.getElementById('lb'), lbi=document.getElementById('lb-img'), cur=0, last=null;
+  function vis(){return items.filter(function(it){return !it.classList.contains('hide');});}
+  function show(i){var v=vis(); cur=(i+v.length)%v.length; var im=v[cur].querySelector('img'); lbi.src=im.src; lbi.alt=im.alt;}
+  items.forEach(function(it){it.addEventListener('click',function(){last=it; show(vis().indexOf(it)); lb.hidden=false; document.getElementById('lb-x').focus();});});
+  function close(){lb.hidden=true; if(last)last.focus();}
+  document.getElementById('lb-x').addEventListener('click',close);
+  document.getElementById('lb-prev').addEventListener('click',function(){show(cur-1);});
+  document.getElementById('lb-next').addEventListener('click',function(){show(cur+1);});
+  lb.addEventListener('click',function(e){if(e.target===lb)close();});
+  document.addEventListener('keydown',function(e){if(lb.hidden)return; if(e.key==='Escape')close(); if(e.key==='ArrowLeft')show(cur-1); if(e.key==='ArrowRight')show(cur+1);});
 })();
 </script>
 </body>
