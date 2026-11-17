@@ -1,33 +1,42 @@
 # Mooncrew Club website
 
-The one-page website for **mooncrewclub.com**: private crews for the world's best nights.
+The website for **Mooncrew Club**: a private crew trip to Hilltop Festival, Weekend 2 (4–8 Feb 2027, Vagator, Goa).
+It is a plain static site with no framework and no npm dependencies, built the same way as the Attention Labs site.
 
-It is plain HTML and CSS with a little JavaScript. There is no build step and nothing to install.
+## Run locally
 
-```
-index.html   the whole page
-img/         the photos used on the page
-```
-
-## Before going live
-
-Open `index.html`, scroll to the bottom and fill in `CONFIG`:
-
-```js
-var CONFIG = {
-  whatsapp: '',   // WhatsApp number with country code, digits only, e.g. 919876543210
-  instagram: '',  // Instagram handle without @, e.g. mooncrewclub
-  email: ''       // e.g. hello@mooncrewclub.com
-};
+```bash
+npm run dev        # builds into ./dist and serves it on http://localhost:4321
 ```
 
-The apply form sends applications to the WhatsApp number. Without a number, the WhatsApp button stays hidden.
+## Edit content
 
-## Deploy on Netlify (free)
+All copy lives in **`src/data.mjs`**: contacts, trip facts, itinerary, what's included, price, FAQs and the gallery. After you edit it, run `npm run build` (Netlify does this on every push).
 
-1. Sign in at [netlify.com](https://www.netlify.com) with GitHub.
-2. **Add new project → Import an existing project → GitHub**, then pick `mooncrewclub`.
-3. Leave the build command empty and set the publish directory to `/` (the repo root). Deploy.
-4. In **Domain management**, add `mooncrewclub.com` (or buy it there). HTTPS is set up automatically.
+| What | Where |
+| --- | --- |
+| Phone numbers, WhatsApp, Instagram | `site` in `src/data.mjs` |
+| Page templates | `build.mjs` |
+| Design system / styles | `assets/css/style.css` (tokens at the top) |
+| Animations & interactions | `assets/js/main.js` |
+| Photos and videos | `assets/img/` (WebP), `assets/video/` |
 
-Every push to `main` then updates the live site on its own.
+**Before going live:**
+1. Check Vinita's number in `src/data.mjs` (it currently has 9 digits).
+2. Add the Instagram handle (`instagram: 'yourhandle'`) to show the Instagram buttons.
+
+## Pages
+
+- `/`: home
+- `/hilltop/`: the full trip: festival, day-by-day plan, inclusions, price, FAQ
+- `/gallery/`: photos with filters and a lightbox
+- `/apply/`: call or WhatsApp the hosts, or apply through a form that opens WhatsApp with the application filled in
+- `404.html`
+
+## Motion
+
+Preloader, curtain page transitions, Lenis smooth scroll, split-text reveals, clip-path image reveals, scroll-filled text, count-up stats, full-screen menu with image previews, custom cursor and magnetic buttons, hover-reveal images on the itinerary, photo and word marquees, accordion, lightbox. Everything respects `prefers-reduced-motion`.
+
+## Deploy on Netlify
+
+`netlify.toml` is included: build command `node build.mjs`, publish directory `dist`. Connect the repo once and every push to `main` updates the live site.
