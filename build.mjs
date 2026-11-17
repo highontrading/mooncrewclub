@@ -6,7 +6,8 @@ import { mkdirSync, rmSync, writeFileSync, readFileSync, cpSync, existsSync } fr
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import {
-  site, nav, trip, strip, stats, words, days, included, notIncluded, plans, audiences, steps, promises, faqs, gallery,
+  site, nav, trip, strip, stats, words, festival, days, included, notIncluded, plans, compare, newbie, comingSoon,
+  audiences, steps, promises, faqs, terms, galleryTypes, gallery,
 } from './src/data.mjs';
 
 const OUT = 'dist';
@@ -86,9 +87,9 @@ const footer = () => `
 <footer class="ftr">
   <div class="ftr__cta container">
     <div class="ftr__cta-top">${label('Twenty seats')}<span class="status"><i></i>${site.status}</span></div>
-    <h2 class="ftr__title" data-split>See you <em>on the hill.</em></h2>
+    <h2 class="ftr__title" data-split>See you <em>at Hilltop.</em></h2>
     <div class="ftr__cta-row">
-      <p class="ftr__lead" data-reveal="fade">Call us, WhatsApp us or DM us on Instagram. A real person replies, usually the same day.</p>
+      <p class="ftr__lead" data-reveal="fade">Call us, WhatsApp us or DM us on Instagram. A real person replies, usually the same day. Twenty seats per Hilltop, and they go.</p>
       <div class="ftr__btns" data-reveal="fade">
         ${btn('Apply for a seat', '/apply/', { variant: 'gold' })}
         ${btn('WhatsApp us', wa(site.whatsapp, waHello), { variant: 'ghost', ext: true, icon: waIco })}
@@ -97,9 +98,9 @@ const footer = () => `
     </div>
   </div>
   <div class="ftr__grid container">
-    <div class="ftr__col"><span class="ftr__k">Pages</span>${nav.map((n) => `<a href="${n.href}">${roll(n.label)}</a>`).join('')}</div>
+    <div class="ftr__col"><span class="ftr__k">Pages</span>${nav.map((n) => `<a href="${n.href}">${roll(n.label)}</a>`).join('')}<a href="/terms/">${roll('Terms')}</a></div>
     <div class="ftr__col"><span class="ftr__k">Talk to us</span>${site.contacts.map((c) => `<a href="tel:+${c.phone}">${roll(`${c.name} · ${c.show}`)}</a>`).join('')}<a href="${wa(site.whatsapp, waHello)}" target="_blank" rel="noopener">${roll('WhatsApp')}</a>${site.instagram ? `<a href="${ig()}" target="_blank" rel="noopener">${roll(`Instagram @${site.instagram}`)}</a>` : ''}</div>
-    <div class="ftr__col"><span class="ftr__k">Next trip</span><span>${trip.name}</span><span>${trip.dates}</span><span>${trip.where}</span></div>
+    <div class="ftr__col"><span class="ftr__k">Booking now</span><span>${trip.name}</span><span>${trip.dates} · ${trip.where}</span><span class="ftr__k" style="margin-top:14px">Coming soon</span><span>${comingSoon.slice(0, 5).map((c) => c.name).join(' · ')}</span></div>
     <div class="ftr__col"><span class="ftr__k">Based in</span>${site.location.map((a) => `<span>${a}</span>`).join('')}<span class="ftr__clock">Goa <b data-clock>--:--</b> IST</span></div>
   </div>
   <div class="ftr__mark container" aria-hidden="true"><div class="fit-wrap" data-fit><span class="fit">MOONCREW</span></div></div>
@@ -187,15 +188,15 @@ const pageHero = ({ k, title, lead, extra = '' }) => `
 
 const stripTile = (t, hidden) => {
   const a = hidden ? ' aria-hidden="true"' : '';
-  if (t.big === 'price') return `<div class="tile tile--gold"${a}><span class="tile__k">From</span><b>₹84K</b><span>per person · 4 nights</span></div>`;
-  if (t.big === 'seats') return `<div class="tile tile--ivory"${a}><span class="tile__k">Crew</span><b>20</b><span>seats · one villa</span></div>`;
+  if (t.big === 'price') return `<div class="tile tile--gold"${a}><span class="tile__k">From</span><b>₹84K</b><span>per person · 5 nights</span></div>`;
+  if (t.big === 'seats') return `<div class="tile tile--ivory"${a}><span class="tile__k">Crew</span><b>20</b><span>seats · one pool villa</span></div>`;
   if (t.video) return `<div class="tile tile--media"${a}><video src="/assets/video/${t.video}.mp4" autoplay muted loop playsinline preload="none" aria-label="${esc(t.alt)}"></video></div>`;
   return `<div class="tile tile--media"${a}>${img(t.img, hidden ? '' : t.alt, { sm: true })}</div>`;
 };
 
 const statsBlock = () => `
 <div class="stats">
-  ${stats.map((s, i) => `<div class="stat" data-reveal="fade" style="--d:${i * 0.08}s"><span class="stat__num"${s.value === '2020' ? `>${s.value}` : countAttrs(s.value)}</span><span class="stat__label">${s.label}</span></div>`).join('')}
+  ${stats.map((s, i) => `<div class="stat" data-reveal="fade" style="--d:${i * 0.08}s"><span class="stat__num"${s.plain ? `>${s.value}` : countAttrs(s.value)}</span><span class="stat__label">${s.label}</span></div>`).join('')}
 </div>`;
 
 const wordMarquee = () => {
@@ -225,15 +226,15 @@ const includedCards = () => `
   </article>`).join('')}
 </div>`;
 
-const plansBlock = () => `
-<div class="plans">
+const plansBlock = (light = false) => `
+<div class="plans${light ? ' plans--light' : ''}">
   ${plans.map((p, i) => `
   <article class="plan${p.featured ? ' plan--featured' : ''}" data-reveal="fade" style="--d:${i * 0.1}s">
     <div class="plan__top"><span class="plan__name">${p.name}</span>${p.featured ? '<span class="plan__badge">Most guests</span>' : ''}</div>
     <div class="plan__price${/\d/.test(p.price) ? '' : ' plan__price--text'}">${p.price}<small>${p.per}</small></div>
     <span class="plan__note">${p.note}</span>
     <ul>${p.points.map((x) => `<li>${check}${x}</li>`).join('')}</ul>
-    ${btn(p.cta, p.featured ? '/apply/' : `/apply/?room=private`, { variant: p.featured ? 'dark' : 'ghost' })}
+    ${btn(p.cta, p.featured ? '/apply/' : `/apply/?room=private`, { variant: light ? (p.featured ? 'gold' : 'ghost-dark') : (p.featured ? 'dark' : 'ghost') })}
   </article>`).join('')}
   <aside class="plans__aside" data-reveal="fade" style="--d:.2s">
     <span class="label">How you pay</span>
@@ -272,22 +273,95 @@ const faqBlock = (list = faqs) => `
   </div>`).join('')}
 </div>`;
 
+// ---------- new sections -----------------------------------------------------
+const festivalSplit = (imgName = 'night-purple', light = true) => `
+<section class="sec sec--tight${light ? ' sec--light' : ''}">
+  <div class="container split">
+    <div class="split__media media" data-reveal="img"><img src="${I(imgName)}" alt="The Hilltop canopy lit up at night" data-parallax="0.1" loading="lazy"></div>
+    <div class="split__text">
+      ${label('The festival')}
+      <h2 class="h2" data-split>${festival.title}</h2>
+      ${festival.paras.map((p) => `<p data-reveal="fade">${p}</p>`).join('')}
+      <div class="split__facts" data-reveal="fade"><span><b>16th</b> edition</span><span><b>Weekend 2</b> 4–7 Feb</span><span><b>Vagator</b> North Goa</span></div>
+    </div>
+  </div>
+</section>`;
+
+const compareBlock = () => `
+<section class="sec sec--light" id="compare">
+  <div class="container">
+    <div class="sec__head sec__head--row">
+      <div>${label('Why go with Mooncrew')}<h2 class="h2" data-split>Same festival. <em>A different trip.</em></h2></div>
+      <p class="sec__lead" data-reveal="fade">Hilltop is the same for everyone. Everything around it is what makes or breaks your week.</p>
+    </div>
+    <div class="cmp" role="table" aria-label="Hilltop on your own compared with Mooncrew">
+      <div class="cmp__row cmp__row--head" role="row">${compare.head.map((h, i) => `<span role="columnheader" class="${i === 2 ? 'cmp__us' : ''}">${i === 2 ? `${mark} ` : ''}${h}</span>`).join('')}</div>
+      ${compare.rows.map((r, i) => `<div class="cmp__row" role="row" data-reveal="fade" style="--d:${i * 0.04}s"><span role="rowheader">${r[0]}</span><span role="cell" class="cmp__them">${r[1]}</span><span role="cell" class="cmp__us">${check}${r[2]}</span></div>`).join('')}
+    </div>
+  </div>
+</section>`;
+
+const newbieBlock = () => `
+<section class="sec newbie">
+  <div class="container">
+    <div class="sec__head sec__head--row">
+      <div>${label('New to raves?')}<h2 class="h2" data-split>Never raved before? <em>Start here.</em></h2></div>
+      <p class="sec__lead" data-reveal="fade">A lot of people want to go to a rave but don't know how. That's exactly who we built this trip for.</p>
+    </div>
+    <div class="nb">
+      ${newbie.map((n, i) => `<article class="nb__card${i === 0 ? ' nb__card--lead' : ''}" data-reveal="fade" style="--d:${(i % 3) * 0.08}s"><span class="nb__n">${pad(i + 1)}</span><h3>${n.title}</h3><p>${n.text}</p></article>`).join('')}
+    </div>
+  </div>
+</section>`;
+
+const comingBlock = () => `
+<section class="sec coming" id="next">
+  <div class="container">
+    <div class="sec__head sec__head--row">
+      <div>${label('Coming soon')}<h2 class="h2" data-split>Hilltop is first. <em>The world is next.</em></h2></div>
+      <p class="sec__lead" data-reveal="fade">We're building crews for the biggest parties in India and around the world. Want first dibs? Join the waitlist on WhatsApp.</p>
+    </div>
+    <div class="cs">
+      <article class="cs__card cs__card--now" data-reveal="fade">
+        <div class="cs__media media">${img('night-stage', '', { sm: true })}</div>
+        <div class="cs__body"><span class="cs__badge cs__badge--now">Booking now</span><h3>Hilltop Festival</h3><span class="cs__where">Goa, India · 4–9 Feb 2027</span>${btn('Apply', '/apply/', { variant: 'gold' })}</div>
+      </article>
+      ${comingSoon.map((c, i) => `
+      <article class="cs__card" data-reveal="fade" style="--d:${((i + 1) % 4) * 0.06}s">
+        <div class="cs__media media">${img(c.img, '', { sm: true })}</div>
+        <div class="cs__body"><span class="cs__badge">Coming soon</span><h3>${c.name}</h3><span class="cs__where">${c.where}</span><p>${c.text}</p>
+          <a class="cs__link" href="${wa(site.whatsapp, `Hi Mooncrew! Please add me to the waitlist for ${c.name === 'And more' ? 'your next trips' : c.name}.`)}" target="_blank" rel="noopener">${roll('Join the waitlist')}<span class="btn__ico">${arrow}</span></a></div>
+      </article>`).join('')}
+    </div>
+  </div>
+</section>`;
+
+const galleryItem = (g, i) => {
+  const src = g.video ? `/assets/video/g/${g.video}.mp4` : I(g.img);
+  const thumb = g.video ? `<img src="/assets/video/g/${g.video}.webp" alt="${esc(g.alt)}" loading="lazy" decoding="async" width="540" height="960"><video src="/assets/video/g/${g.video}.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="witem__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>` : img(g.img, g.alt, { sm: true });
+  return `
+    <button type="button" class="witem${g.video ? ' witem--video' : ''}" data-type="${g.type}" data-photo="${src}"${g.video ? ' data-kind="video"' : ''} data-photo-title="${esc(g.alt)}" data-cursor="${g.video ? 'Play' : 'View'}">
+      <span class="media" data-reveal="img">${thumb}</span>
+      <span class="witem__meta"><span>${pad(i + 1)} · ${g.type}</span><span>${g.video ? 'Video' : g.note || 'Photo'}</span></span>
+    </button>`;
+};
+
 // ---------- pages ----------------------------------------------------------
 const home = () => layout({
   path: '/', pt: 'Home', cls: 'page-home',
   body: `
 <section class="hero">
   <div class="hero__top container">
-    ${label('Hilltop Festival · Weekend 2')}
+    ${label('Hilltop Festival 2027 · Weekend 2')}
     <span class="status"><i></i>${site.status}</span>
     <span class="hero__where">${trip.where} · ${trip.dates}</span>
   </div>
-  <h1 class="hero__mark container"><span class="sr">Mooncrew Club: a private crew trip to Hilltop Festival</span><span class="fit-wrap" data-fit aria-hidden="true"><span class="fit" data-split="chars">MOONCREW</span></span></h1>
+  <h1 class="hero__mark container"><span class="sr">Mooncrew Club: a hand-picked crew of 20 at Hilltop Festival, Goa</span><span class="fit-wrap" data-fit aria-hidden="true"><span class="fit" data-split="chars">MOONCREW</span></span></h1>
   <div class="hero__row container">
     <p class="hero__lead">Four days at Hilltop. <em>One villa. Twenty of us.</em></p>
     <div class="hero__side">
-      <p>A private crew trip to Hilltop Festival's Weekend 2. The villa, the food, the passes, two house parties and every ride, handled by Goa locals.</p>
-      <div class="hero__btns">${btn('Apply for a seat', '/apply/', { variant: 'gold' })}${btn('See the plan', '/hilltop/', { variant: 'ghost' })}</div>
+      <p>Hilltop Festival, Weekend 2. Five nights in a luxury Goa villa with a private pool, your festival pass, a private cook, house parties with booked DJs and every ride. Partying since 2020, with a hand-picked crew of twenty.</p>
+      <div class="hero__btns">${btn('Apply for a seat', '/apply/', { variant: 'gold' })}${btn("What's included", '/hilltop/#included', { variant: 'ghost' })}</div>
     </div>
   </div>
   <div class="strip" aria-label="Photos from Hilltop and Goa"><div class="strip__track">${strip.map((t) => stripTile(t, false)).join('')}${strip.map((t) => stripTile(t, true)).join('')}</div></div>
@@ -297,8 +371,8 @@ const home = () => layout({
   <div class="container about__grid">
     <div class="about__side">${label('Why Mooncrew')}<div class="about__video media" data-reveal="img"><video src="/assets/video/hilltop.mp4" poster="${I('hilltop-poster')}" autoplay muted loop playsinline preload="metadata" aria-label="The Hilltop stage lighting up at night"></video></div></div>
     <div>
-      <p class="about__fill" data-fill>Most people fly in for Hilltop and lose half of it to cab queues, bad stays and groups that fall apart. We live here. We take twenty people, put them in one villa and handle everything else, so the only thing you do is dance.</p>
-      <div class="about__btns" data-reveal="fade">${btn('How the trip works', '/hilltop/', { variant: 'dark' })}${btn('Meet your hosts', '/apply/', { variant: 'ghost-dark' })}</div>
+      <p class="about__fill" data-fill>We have been partying in Goa since 2020, and taking people with us. Every Hilltop, we pick just twenty. We put them in one of Goa's best villas with a private pool, feed them day and night, drive them everywhere and throw the house parties ourselves. All you do is dance.</p>
+      <div class="about__btns" data-reveal="fade">${btn('See the full trip', '/hilltop/', { variant: 'dark' })}${btn('Talk to us', '/apply/', { variant: 'ghost-dark' })}</div>
     </div>
   </div>
   <div class="container">${statsBlock()}</div>
@@ -306,19 +380,21 @@ const home = () => layout({
 
 <section class="sec pillhead-sec">
   <div class="container">
-    <h2 class="pillhead" data-reveal="fade">Four days <span class="pimg">${img('day-canopy', '', { sm: true })}</span> on the hill. One villa <span class="pimg pimg--round">${img('pool', '', { sm: true })}</span> by the sea. Twenty <span class="pimg"><video src="/assets/video/hands.mp4" autoplay muted loop playsinline preload="none"></video></span> of us.</h2>
+    <h2 class="pillhead" data-reveal="fade">Four days <span class="pimg">${img('day-canopy', '', { sm: true })}</span> at Hilltop. One villa <span class="pimg pimg--round">${img('villa-pool', '', { sm: true })}</span> with a private pool. Twenty <span class="pimg"><video src="/assets/video/hands.mp4" autoplay muted loop playsinline preload="none"></video></span> of us.</h2>
   </div>
   ${wordMarquee()}
 </section>
 
+${festivalSplit()}
+
 <section class="sec" id="plan">
   <div class="container">
     <div class="sec__head sec__head--row">
-      <div>${label('The plan · 4–8 Feb')}<h2 class="h2" data-split>Five days, <em>one rhythm.</em></h2></div>
-      <p class="sec__lead" data-reveal="fade">Beach by day, Hilltop by night, the villa in between. Hover a day to see it.</p>
+      <div>${label('The plan · 4–9 Feb')}<h2 class="h2" data-split>Six days, <em>one rhythm.</em></h2></div>
+      <p class="sec__lead" data-reveal="fade">Four days of Hilltop, our own house party, and five nights in the villa. Hover a day to see it.</p>
     </div>
     ${itinerary()}
-    <p class="small" data-reveal="fade">House parties are sunset sessions, 5 to 10 pm, in line with Goa's music rules. Festival timings follow the official schedule.</p>
+    <p class="small" data-reveal="fade">Festival timings follow the official schedule. Outdoor music at the villa ends at 10 pm, as Goa's rules require; after that, the party moves indoors.</p>
   </div>
 </section>
 
@@ -332,12 +408,16 @@ const home = () => layout({
   </div>
 </section>
 
-<section class="sec" id="price">
+${compareBlock().replace('sec sec--light', 'sec')}
+
+<section class="sec sec--light" id="price">
   <div class="container">
-    <div class="sec__head">${label('Price')}<h2 class="h2" data-split>One price. <em>No surprises.</em></h2></div>
-    ${plansBlock()}
+    <div class="sec__head">${label('Price')}<h2 class="h2" data-split>One price. <em>Everything in.</em></h2></div>
+    ${plansBlock(true)}
   </div>
 </section>
+
+${newbieBlock()}
 
 <section class="sec sec--light">
   <div class="container">
@@ -357,9 +437,11 @@ const home = () => layout({
 
 ${promiseBlock()}
 
+${comingBlock()}
+
 <section class="sec sec--light" id="faq">
   <div class="container faq__grid">
-    <div class="sec__head">${label('FAQ')}<h2 class="h2" data-split>Before you <em>apply.</em></h2><p class="sec__lead" data-reveal="fade">Still curious? Call or WhatsApp us. We like questions.</p><div data-reveal="fade" class="faq__contacts">${contactLinks('person--dark')}</div></div>
+    <div class="sec__head">${label('FAQ')}<h2 class="h2" data-split>Before you <em>apply.</em></h2><p class="sec__lead" data-reveal="fade">Still curious? Call or WhatsApp us. We like questions.</p><div data-reveal="fade" class="faq__contacts">${contactLinks('person--dark')}</div><p class="small" data-reveal="fade">Read our <a href="/terms/" class="u">terms</a>, including cancellation and our drug-free policy.</p></div>
     ${faqBlock()}
   </div>
 </section>`,
@@ -367,36 +449,26 @@ ${promiseBlock()}
 
 const hilltopPage = () => layout({
   title: 'The Trip', path: '/hilltop/', pt: 'The Trip',
-  description: 'Hilltop Festival 2027, Weekend 2 with Mooncrew Club: itinerary, what is included, price and how to book. 4–8 Feb 2027, Vagator, Goa.',
+  description: 'Hilltop Festival 2027, Weekend 2 with Mooncrew Club: five nights in a luxury pool villa, your festival pass, a private cook, house parties and every ride. 4–9 Feb 2027, Vagator, Goa.',
   body: `
-${pageHero({ k: 'The trip', title: 'Hilltop, <em>the Mooncrew way.</em>', lead: "Hilltop's 16th edition runs over two weekends for the first time. We're going for Weekend 2: four days on the hill, four nights in a private villa, with a crew of twenty." })}
+${pageHero({ k: 'The trip', title: 'Hilltop, <em>the Mooncrew way.</em>', lead: "Four days at Hilltop Festival, five nights in one of Goa's best villas with a private pool, and a hand-picked crew of twenty. Everything around the festival, handled." })}
 
 <section class="container facts" aria-label="Trip facts">
-  ${[['Dates', trip.dates], ['Festival', `Hilltop · ${trip.festivalDates}`], ['Stay', 'Private villa, 10–15 min away'], ['Crew', `${trip.seats} seats`], ['Price', `${trip.price} per person`], ['Applications', `Close ${trip.closes}`]]
+  ${[['Stay', `${trip.dates} · ${trip.nights} nights`], ['Festival', `Hilltop Weekend 2 · ${trip.festivalDates}`], ['Villa', 'Luxury, private pool'], ['Crew', `${trip.seats} hand-picked guests`], ['Price', `${trip.price} per person`], ['Applications', `Close ${trip.closes}`]]
     .map(([k, v], i) => `<div class="fact" data-reveal="fade" style="--d:${i * 0.05}s"><span>${k}</span><b>${v}</b></div>`).join('')}
 </section>
 
-<section class="sec sec--tight">
-  <div class="container split">
-    <div class="split__media media" data-reveal="img"><img src="${I('night-purple')}" alt="The Hilltop canopy lit up at night" data-parallax="0.1" loading="lazy"></div>
-    <div class="split__text">
-      ${label('The festival')}
-      <h2 class="h2" data-split>A hill in Vagator. <em>Giant glowing canopies.</em></h2>
-      <p data-reveal="fade">Hilltop is Goa's best-known psytrance stage: a hillside venue under huge painted canopies, where the crowd doesn't stop. The festival announces its own line-up, and we share it in the crew group the day it's out.</p>
-      <p data-reveal="fade">We are independent hosts, not the organisers. We buy your Weekend 2 pass through the official channel and handle everything around it.</p>
-    </div>
-  </div>
-</section>
+${festivalSplit('night-blue')}
 
 <section class="sec" id="plan">
   <div class="container">
-    <div class="sec__head">${label('Day by day')}<h2 class="h2" data-split>The plan, <em>hour by hour-ish.</em></h2></div>
+    <div class="sec__head">${label('Day by day · 4–9 Feb')}<h2 class="h2" data-split>Six days, <em>one rhythm.</em></h2></div>
     ${itinerary()}
-    <p class="small" data-reveal="fade">House parties are sunset sessions, 5 to 10 pm, in line with Goa's music rules.</p>
+    <p class="small" data-reveal="fade">Festival timings follow the official schedule. Outdoor music at the villa ends at 10 pm, as Goa's rules require.</p>
   </div>
 </section>
 
-<section class="sec sec--light">
+<section class="sec sec--light" id="included">
   <div class="container">
     <div class="sec__head">${label("What's included")}<h2 class="h2" data-split>Everything, <em>except the flight.</em></h2></div>
     ${includedCards()}
@@ -404,12 +476,16 @@ ${pageHero({ k: 'The trip', title: 'Hilltop, <em>the Mooncrew way.</em>', lead: 
   </div>
 </section>
 
-<section class="sec">
+${compareBlock().replace('sec sec--light', 'sec')}
+
+<section class="sec sec--light">
   <div class="container">
-    <div class="sec__head">${label('Price')}<h2 class="h2" data-split>One price. <em>No surprises.</em></h2></div>
-    ${plansBlock()}
+    <div class="sec__head">${label('Price')}<h2 class="h2" data-split>One price. <em>Everything in.</em></h2></div>
+    ${plansBlock(true)}
   </div>
 </section>
+
+${newbieBlock()}
 
 <section class="sec sec--light sec--tight">
   <div class="container">
@@ -422,33 +498,24 @@ ${promiseBlock()}
 
 <section class="sec sec--light">
   <div class="container faq__grid">
-    <div class="sec__head">${label('FAQ')}<h2 class="h2" data-split>Good <em>questions.</em></h2></div>
+    <div class="sec__head">${label('FAQ')}<h2 class="h2" data-split>Good <em>questions.</em></h2><p class="small" data-reveal="fade">Full details in our <a href="/terms/" class="u">terms</a>.</p></div>
     ${faqBlock()}
   </div>
 </section>`,
 });
 
-const galleryPage = () => {
-  const types = ['All', ...new Set(gallery.map((g) => g.type))];
-  return layout({
-    title: 'Gallery', path: '/gallery/', pt: 'Gallery',
-    description: 'Photos from Hilltop Festival and North Goa: the nights on the hill and the slow days in between.',
-    body: `
-${pageHero({ k: 'Gallery', title: 'Hilltop and Goa, <em>through our lens.</em>', lead: 'Our own photos from Hilltop and around North Goa: the nights on the hill and the slow days in between. Tap any photo to open it.' })}
+const galleryPage = () => layout({
+  title: 'Gallery', path: '/gallery/', pt: 'Gallery',
+  description: 'Photos and videos: Hilltop, psytrance and techno nights, house parties, villas and Goa sunsets.',
+  body: `
+${pageHero({ k: 'Gallery', title: 'See it <em>before you feel it.</em>', lead: 'Hilltop, psytrance and techno nights, house parties, villas and Goa sunsets. Pick a category, then tap any photo or video to open it.' })}
 <section class="container gal">
-  <div class="chips" role="group" aria-label="Filter photos">
-    ${types.map((t, i) => `<button type="button" class="chip${i === 0 ? ' is-on' : ''}" data-filter="${t}" aria-pressed="${i === 0}">${t}<sup>${t === 'All' ? gallery.length : gallery.filter((g) => g.type === t).length}</sup></button>`).join('')}
+  <div class="chips" role="group" aria-label="Filter the gallery">
+    ${galleryTypes.map((t, i) => `<button type="button" class="chip${i === 0 ? ' is-on' : ''}" data-filter="${t}" aria-pressed="${i === 0}">${t}<sup>${t === 'All' ? gallery.length : gallery.filter((g) => g.type === t).length}</sup></button>`).join('')}
   </div>
-  <div class="gal__grid">
-    ${gallery.map((g, i) => `
-    <button type="button" class="witem" data-type="${g.type}" data-photo="${I(g.img)}" data-photo-title="${esc(g.alt)}" data-cursor="View" style="--d:${(i % 4) * 0.06}s">
-      <span class="media" data-reveal="img">${img(g.img, g.alt, { sm: true })}</span>
-      <span class="witem__meta"><span>${pad(i + 1)}</span><span>${g.type}</span></span>
-    </button>`).join('')}
-  </div>
+  <div class="gal__grid">${gallery.map(galleryItem).join('')}</div>
 </section>`,
-  });
-};
+});
 
 const applyPage = () => layout({
   title: 'Apply', path: '/apply/', pt: 'Apply',
@@ -477,6 +544,12 @@ const applyPage = () => layout({
         <div class="pcard__btns">${site.instagram ? `<a class="pill" href="${ig()}" target="_blank" rel="noopener">${igIco}<span>Open Instagram</span></a>` : `<span class="pill pill--muted">${igIco}<span>Search “Mooncrew Club”</span></span>`}</div>
       </div>
     </div>
+    <div class="contact__mini" data-reveal="fade">
+      <div><span>Trip</span><b>${trip.dates}</b></div>
+      <div><span>Price</span><b>${trip.price}</b></div>
+      <div><span>Advance</span><b>${trip.advance}</b></div>
+    </div>
+    <p class="small" data-reveal="fade">By applying you agree to our <a href="/terms/" class="u">terms</a>, including cancellation and our drug-free policy.</p>
   </div>
 
   <div class="contact__right" data-reveal="fade">
@@ -489,6 +562,9 @@ const applyPage = () => layout({
       <fieldset class="field field--full"><legend>How many of you?</legend>
         <div class="radios">${['Just me', 'Two of us', '3–4 of us', '5 or more'].map((o, i) => `<label class="radio"><input type="radio" name="people" value="${o}"${i === 0 ? ' checked' : ''}><span>${o}</span></label>`).join('')}</div>
       </fieldset>
+      <fieldset class="field field--full"><legend>Been to a rave before?</legend>
+        <div class="radios">${['First time', 'A few times', 'Festival regular'].map((o, i) => `<label class="radio"><input type="radio" name="exp" value="${o}"${i === 0 ? ' checked' : ''}><span>${o}</span></label>`).join('')}</div>
+      </fieldset>
       <fieldset class="field field--full"><legend>Room</legend>
         <div class="radios">${['Happy to share', 'Ask me about a private room'].map((o, i) => `<label class="radio"><input type="radio" name="room" value="${o}"${i === 0 ? ' checked' : ''} data-room="${i ? 'private' : 'shared'}"><span>${o}</span></label>`).join('')}</div>
       </fieldset>
@@ -496,14 +572,14 @@ const applyPage = () => layout({
       <fieldset class="field field--full"><legend>Send it to</legend>
         <div class="radios">${site.contacts.map((c, i) => `<label class="radio"><input type="radio" name="to" value="${c.phone}"${i === 0 ? ' checked' : ''}><span>${esc(c.name)}</span></label>`).join('')}</div>
       </fieldset>
-      <div class="form__foot"><p class="form__msg" data-form-msg role="alert"></p>${`<button class="btn btn--gold" type="submit" data-magnetic>${roll('Continue on WhatsApp')}<span class="btn__ico">${waIco}</span></button>`}</div>
+      <div class="form__foot"><p class="form__msg" data-form-msg role="alert"></p><button class="btn btn--gold" type="submit" data-magnetic>${roll('Continue on WhatsApp')}<span class="btn__ico">${waIco}</span></button></div>
     </form>
     <div class="form__done" data-form-done hidden>
       <span class="label">Almost done</span>
       <h2 class="h2">Check <em>WhatsApp.</em></h2>
-      <p>Your application is ready in WhatsApp. Just press send. If WhatsApp didn't open, copy the text below and send it to us.</p>
+      <p>Your application is ready in WhatsApp. Just press send. If WhatsApp didn't open, tap the button below, or copy the text and send it to us.</p>
       <pre data-form-text></pre>
-      <div class="hero__btns"><button type="button" class="btn btn--dark" data-copy>${roll('Copy text')}</button><a class="btn btn--ghost-dark" data-form-wa href="#" target="_blank" rel="noopener">${roll('Open WhatsApp again')}<span class="btn__ico">${waIco}</span></a></div>
+      <div class="hero__btns"><a class="btn btn--gold" data-form-wa href="#" target="_blank" rel="noopener">${roll('Open WhatsApp')}<span class="btn__ico">${waIco}</span></a><button type="button" class="btn btn--ghost-dark" data-copy>${roll('Copy text')}</button></div>
     </div>
   </div>
 </section>
@@ -516,9 +592,27 @@ const applyPage = () => layout({
 </section>`,
 });
 
+const termsPage = () => layout({
+  title: 'Terms', path: '/terms/', pt: 'Terms',
+  description: 'Mooncrew Club trip terms: booking, payment, cancellation, our drug-free policy, the festival, house parties and conduct.',
+  body: `
+${pageHero({ k: 'Terms', title: 'The small print, <em>in plain words.</em>', lead: `Please read these before you pay. Last updated ${terms.updated}.` })}
+<section class="container terms">
+  <nav class="terms__toc" aria-label="Sections">${terms.sections.map((s, i) => `<a href="#t-${i + 1}">${pad(i + 1)} · ${s.h}</a>`).join('')}</nav>
+  <div class="terms__body">
+    ${terms.sections.map((s, i) => `
+    <section class="terms__sec${s.h === 'Drug-free policy' ? ' terms__sec--hl' : ''}" id="t-${i + 1}" data-reveal="fade">
+      <span class="terms__n">${pad(i + 1)}</span>
+      <div><h2>${s.h}</h2>${s.p.map((p) => `<p>${p}</p>`).join('')}</div>
+    </section>`).join('')}
+    <p class="small">Questions about these terms? Call or WhatsApp ${site.contacts.map((c) => `${c.name} (${c.show})`).join(' or ')}.</p>
+  </div>
+</section>`,
+});
+
 const notFound = () => layout({
-  title: 'Lost on the hill', path: '/404.html', pt: '404',
-  body: `${pageHero({ k: '404', title: 'Lost on <em>the hill.</em>', lead: 'This page has left the party. Head back home or apply for a seat.', extra: `<div class="hero__btns container-none">${btn('Back home', '/', { variant: 'gold' })}${btn('Apply', '/apply/', { variant: 'ghost' })}</div>` })}`,
+  title: 'Page not found', path: '/404.html', pt: '404',
+  body: `${pageHero({ k: '404', title: 'This page <em>left the party.</em>', lead: 'Head back home, or apply for a seat at Hilltop.', extra: `<div class="hero__btns">${btn('Back home', '/', { variant: 'gold' })}${btn('Apply', '/apply/', { variant: 'ghost' })}</div>` })}`,
 });
 
 // ---------- write ----------------------------------------------------------
@@ -536,9 +630,10 @@ write('index.html', home());
 write('hilltop/index.html', hilltopPage());
 write('gallery/index.html', galleryPage());
 write('apply/index.html', applyPage());
+write('terms/index.html', termsPage());
 write('404.html', notFound());
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${['/', '/hilltop/', '/gallery/', '/apply/'].map((p) => `  <url><loc>${site.url}${p}</loc></url>`).join('\n')}
+${['/', '/hilltop/', '/gallery/', '/apply/', '/terms/'].map((p) => `  <url><loc>${site.url}${p}</loc></url>`).join('\n')}
 </urlset>`);
-console.log('Built 5 pages → dist/');
+console.log('Built 6 pages → dist/');

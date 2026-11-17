@@ -598,10 +598,18 @@
     lbI = (i + lbList.length) % lbList.length;
     const b = lbList[lbI];
     lbMedia.innerHTML = '';
-    const im = new Image();
-    im.src = b.dataset.photo;
-    im.alt = b.dataset.photoTitle || '';
-    lbMedia.appendChild(im);
+    if (b.dataset.kind === 'video') {
+      const v = document.createElement('video');
+      v.src = b.dataset.photo; v.controls = true; v.loop = true; v.playsInline = true; v.autoplay = true;
+      v.setAttribute('aria-label', b.dataset.photoTitle || '');
+      lbMedia.appendChild(v);
+      v.play?.().catch(() => { v.muted = true; v.play?.().catch(() => {}); });
+    } else {
+      const im = new Image();
+      im.src = b.dataset.photo;
+      im.alt = b.dataset.photoTitle || '';
+      lbMedia.appendChild(im);
+    }
     lbTitle.textContent = `${String(lbI + 1).padStart(2, '0')} / ${String(lbList.length).padStart(2, '0')} · ${b.dataset.photoTitle || ''}`;
   }
   function openLightbox(from) {
@@ -622,6 +630,14 @@
     lbReturn?.focus({ preventScroll: true });
   }
   $$('[data-photo]').forEach((b) => b.addEventListener('click', () => openLightbox(b)));
+  // Gallery video tiles: preview on hover (desktop only)
+  if (fine && !reduce) {
+    $$('.witem--video').forEach((t) => {
+      const v = $('video', t);
+      t.addEventListener('pointerenter', () => { v.play?.().then(() => t.classList.add('is-playing')).catch(() => {}); });
+      t.addEventListener('pointerleave', () => { v.pause?.(); t.classList.remove('is-playing'); });
+    });
+  }
   $$('[data-lightbox-close]').forEach((b) => b.addEventListener('click', closeLightbox));
   $('[data-lightbox-prev]')?.addEventListener('click', () => showPhoto(lbI - 1));
   $('[data-lightbox-next]')?.addEventListener('click', () => showPhoto(lbI + 1));
@@ -716,5 +732,5 @@
     const v = e.target;
     if (e.isIntersecting && !reduce) { v.play?.().catch(() => {}); } else v.pause?.();
   }), { rootMargin: '120px' });
-  $$('video').forEach((v) => { if (reduce) v.removeAttribute('autoplay'); vio.observe(v); });
+  $$('video').filter((v) => !v.closest('.witem')).forEach((v) => { if (reduce) v.removeAttribute('autoplay'); vio.observe(v); });
 })();
