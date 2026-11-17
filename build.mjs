@@ -37,7 +37,7 @@ const img = (name, alt = '', { cls = '', eager = false, sm = false } = {}) =>
   `<img src="${I(name, sm)}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''} ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="1080" height="1350">`;
 const wa = (num, text = '') => `https://wa.me/${num}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 const ig = () => (site.instagram ? `https://instagram.com/${site.instagram}` : '');
-const waHello = "Hi Mooncrew! I'd like to know more about the Hilltop trip (4–8 Feb 2027).";
+const waHello = "Hi Mooncrew! I'd like to know more about the Hilltop trip (4–9 Feb 2027).";
 const mark = `<svg class="moon" viewBox="0 0 140 120" aria-hidden="true"><defs><mask id="mcm"><rect width="140" height="120" fill="#fff"/><circle cx="74" cy="60" r="50" fill="#000"/></mask></defs><circle cx="58" cy="60" r="50" fill="currentColor" mask="url(#mcm)"/><circle cx="74" cy="60" r="50" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
 const logo = `<span class="logo">${mark}<span class="logo__t"><span class="logo__wm">MOONCREW</span><span class="logo__club"><i></i>Club<i></i></span></span></span>`;
 
@@ -112,7 +112,7 @@ const footer = () => `
 </footer>`;
 
 const layout = ({ title, description = site.description, path = '/', body, pt = 'Home', cls = '' }) => {
-  const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · Hilltop Festival Weekend 2 · Goa, 4–8 Feb 2027`;
+  const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · Hilltop Festival Weekend 2 · Goa, 4–9 Feb 2027`;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -360,7 +360,7 @@ const home = () => layout({
   <div class="hero__row container">
     <p class="hero__lead">Four days at Hilltop. <em>One villa. Twenty of us.</em></p>
     <div class="hero__side">
-      <p>Hilltop Festival, Weekend 2. Five nights in a luxury Goa villa with a private pool, your festival pass, a private cook, house parties with booked DJs and every ride. Partying since 2020, with a hand-picked crew of twenty.</p>
+      <p>Hilltop Festival, Weekend 2. Five nights in a luxury Goa villa with a private pool, your festival pass, a private cook, an after-party at the villa after every Hilltop night, and every ride. Partying since 2020, with a hand-picked crew of twenty.</p>
       <div class="hero__btns">${btn('Apply for a seat', '/apply/', { variant: 'gold' })}${btn("What's included", '/hilltop/#included', { variant: 'ghost' })}</div>
     </div>
   </div>
@@ -371,7 +371,7 @@ const home = () => layout({
   <div class="container about__grid">
     <div class="about__side">${label('Why Mooncrew')}<div class="about__video media" data-reveal="img"><video src="/assets/video/hilltop.mp4" poster="${I('hilltop-poster')}" autoplay muted loop playsinline preload="metadata" aria-label="The Hilltop stage lighting up at night"></video></div></div>
     <div>
-      <p class="about__fill" data-fill>We have been partying in Goa since 2020, and taking people with us. Every Hilltop, we pick just twenty. We put them in one of Goa's best villas with a private pool, feed them day and night, drive them everywhere and throw the house parties ourselves. All you do is dance.</p>
+      <p class="about__fill" data-fill>We have been partying in Goa since 2020, and taking people with us. Every Hilltop, we pick just twenty. We put them in one of Goa's best villas with a private pool, feed them day and night, drive them everywhere, and when Hilltop ends, the after-party carries on at home. All you do is dance.</p>
       <div class="about__btns" data-reveal="fade">${btn('See the full trip', '/hilltop/', { variant: 'dark' })}${btn('Talk to us', '/apply/', { variant: 'ghost-dark' })}</div>
     </div>
   </div>
@@ -391,7 +391,7 @@ ${festivalSplit()}
   <div class="container">
     <div class="sec__head sec__head--row">
       <div>${label('The plan · 4–9 Feb')}<h2 class="h2" data-split>Six days, <em>one rhythm.</em></h2></div>
-      <p class="sec__lead" data-reveal="fade">Four days of Hilltop, our own house party, and five nights in the villa. Hover a day to see it.</p>
+      <p class="sec__lead" data-reveal="fade">Four days at Hilltop, a private after-party every night, our own pool party and five nights in the villa. Hover a day to see it.</p>
     </div>
     ${itinerary()}
     <p class="small" data-reveal="fade">Festival timings follow the official schedule. Outdoor music at the villa ends at 10 pm, as Goa's rules require; after that, the party moves indoors.</p>
@@ -449,7 +449,7 @@ ${comingBlock()}
 
 const hilltopPage = () => layout({
   title: 'The Trip', path: '/hilltop/', pt: 'The Trip',
-  description: 'Hilltop Festival 2027, Weekend 2 with Mooncrew Club: five nights in a luxury pool villa, your festival pass, a private cook, house parties and every ride. 4–9 Feb 2027, Vagator, Goa.',
+  description: 'Hilltop Festival 2027, Weekend 2 with Mooncrew Club: five nights in a luxury pool villa, your festival pass, a private cook, private after-parties every night and every ride. 4–9 Feb 2027, Vagator, Goa.',
   body: `
 ${pageHero({ k: 'The trip', title: 'Hilltop, <em>the Mooncrew way.</em>', lead: "Four days at Hilltop Festival, five nights in one of Goa's best villas with a private pool, and a hand-picked crew of twenty. Everything around the festival, handled." })}
 

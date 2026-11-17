@@ -673,7 +673,7 @@
       if (!validate()) { msg.textContent = 'Please add your name and a WhatsApp number.'; return; }
       const d = new FormData(form);
       const txt = [
-        "Hi Mooncrew! I'd like to apply for the Hilltop Festival trip (Weekend 2, 4–8 Feb 2027).", '',
+        "Hi Mooncrew! I'd like to apply for the Hilltop Festival trip (Weekend 2, 4–9 Feb 2027).", '',
         `Name: ${d.get('name')}`, `WhatsApp: ${d.get('phone')}`,
         d.get('instagram') ? `Instagram: ${d.get('instagram')}` : '', d.get('city') ? `City: ${d.get('city')}` : '',
         `People: ${d.get('people')}`, `Room: ${d.get('room')}`,

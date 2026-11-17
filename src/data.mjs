@@ -8,7 +8,7 @@ export const site = {
   url: 'https://mooncrewclub.com',
   tagline: 'Private crew trips to the best parties in the world',
   description:
-    'Hilltop Festival 2027, Weekend 2, with Mooncrew Club: a hand-picked crew of 20, five nights in a luxury Goa villa with a private pool, your Hilltop pass, a private cook, house parties with booked DJs and every ride. 4–9 Feb 2027. ₹84,000 per person.',
+    'Hilltop Festival 2027, Weekend 2, with Mooncrew Club: a hand-picked crew of 20, five nights in a luxury Goa villa with a private pool, your Hilltop pass, a private cook, a private after-party at the villa after every Hilltop night, and every ride. 4–9 Feb 2027. ₹84,000 per person.',
   status: 'Applications open · closes 31 Dec',
   // People can call or WhatsApp either host. Numbers are digits only, with the country code.
   contacts: [
@@ -82,11 +82,11 @@ export const festival = {
 };
 
 export const days = [
-  { d: 'Thu', date: '4 Feb', title: 'Arrive + Hilltop opens', text: 'Airport pickup, check-in at the villa, lunch by the pool. The festival opens today, and our cars take you up whenever you are ready.', tag: 'Day 1', img: 'villa-pool' },
-  { d: 'Fri', date: '5 Feb', title: 'Pool, then Hilltop', text: 'Sleep in, breakfast by the pool, then Hilltop. Back at the villa, the after-party carries on.', tag: 'Day 2', img: 'night-blue' },
-  { d: 'Sat', date: '6 Feb', title: 'The big night', text: "A crew shoot with our photographer in the afternoon, then Hilltop's biggest night of the weekend.", tag: 'Peak', img: 'night-purple', hl: true },
-  { d: 'Sun', date: '7 Feb', title: 'Closing day', text: "Hilltop's final day. Sunset, one last set, then a late dinner together at the villa.", tag: 'Day 4', img: 'night-stage' },
-  { d: 'Mon', date: '8 Feb', title: 'The Mooncrew house party', text: 'Our own party at the villa: booked DJs, the pool, food all day and a Goa sunset to close the festival.', tag: 'House party', img: 'decks' },
+  { d: 'Thu', date: '4 Feb', title: 'Arrive + Hilltop opens', text: 'Airport pickup, check-in, lunch by the pool. Then Hilltop opens: six to eight hours on the dancefloor, and our cars bring you home to the first private after-party at the villa.', tag: 'Day 1', img: 'villa-pool' },
+  { d: 'Fri', date: '5 Feb', title: 'Hilltop, then home to party', text: 'Sleep in, breakfast by the pool, then hours of dancing at Hilltop. Back at the villa, a booked DJ keeps our private after-party going.', tag: 'Day 2', img: 'night-blue' },
+  { d: 'Sat', date: '6 Feb', title: 'The big night', text: "A crew shoot in the afternoon, Hilltop's biggest night of the weekend, then the biggest after-party of the week at the villa.", tag: 'Peak', img: 'night-purple', hl: true },
+  { d: 'Sun', date: '7 Feb', title: 'Closing day', text: "Hilltop's final day and one last sunset set, then a closing after-party at the villa with the crew.", tag: 'Day 4', img: 'night-stage' },
+  { d: 'Mon', date: '8 Feb', title: 'The Mooncrew pool party', text: 'No festival today, just us: a daytime house party by the pool with booked DJs, food all day and a Goa sunset to close it.', tag: 'House party', img: 'decks' },
   { d: 'Tue', date: '9 Feb', title: 'Slow goodbye', text: 'Breakfast, one last swim, check-out and your airport drop.', tag: 'Home', img: 'goldpalm' },
 ];
 
@@ -94,7 +94,7 @@ export const included = [
   { k: 'Stay', title: 'A luxury pool villa', text: "Five nights in one of Goa's best villas, with a private pool, 10–15 minutes from Hilltop. 2–3 guests per room.", img: 'villa-pool' },
   { k: 'Festival', title: 'Your Hilltop pass', text: 'Hilltop Festival 2027, Weekend 2, 4–7 February, bought through the official ticket seller.', img: 'wristbands' },
   { k: 'Food', title: 'A private cook, all day', text: 'Breakfast, lunch, dinner and late-night food, cooked at the villa through the day and night.', img: 'bowl' },
-  { k: 'Parties', title: 'House parties + after-parties', text: 'Booked DJs, sound, decor and drinks at the villa. Your party starts when Hilltop ends.', img: 'decks' },
+  { k: 'Parties', title: 'A private after-party every night', text: 'After each of the four Hilltop days, the party moves home: our own after-party at the villa with booked DJs, sound and drinks. Plus a pool party on 8 Feb.', img: 'decks' },
   { k: 'Rides', title: 'Your own cars', text: 'Cars to Hilltop and back whenever you need them, plus airport pickup and drop.', img: 'beach' },
   { k: 'Sunsets', title: 'Golden hours', text: 'Sunsets by the pool and on the beach, between the festival days.', img: 'pink' },
   { k: 'Memories', title: 'A photographer', text: 'A crew shoot and party coverage, so your phone can stay in your pocket.', img: 'night-blue' },
@@ -114,7 +114,7 @@ export const plans = [
     price: '₹84,000',
     per: 'per person',
     note: '2–3 guests per room · 5 nights',
-    points: ['Luxury villa with a private pool', 'Hilltop Weekend 2 pass', 'Private cook, all meals', 'House parties + after-parties with booked DJs', 'Cars all trip + airport pickup and drop', 'Photographer + Mooncrew welcome kit'],
+    points: ['Luxury villa with a private pool', 'Hilltop Weekend 2 pass', 'Private cook, all meals', 'A private after-party after every Hilltop night', 'Pool party with booked DJs on 8 Feb', 'Cars all trip + airport pickup and drop', 'Photographer + Mooncrew welcome kit'],
     cta: 'Apply for a seat',
     featured: true,
   },
@@ -134,7 +134,7 @@ export const compare = {
     ['Stay', 'A hotel you found online, often far from the venue', 'A luxury villa with a private pool, 10–15 minutes away'],
     ['Getting there', 'Cabs and haggling, especially at night', 'Our cars, whenever you need them'],
     ['Food', 'Wherever is open', 'A private cook, day and night'],
-    ['After Hilltop', 'Searching Instagram for an after-party', 'House parties and after-parties at your villa, with booked DJs'],
+    ['After Hilltop', 'Searching Instagram for an after-party', 'A private after-party at your villa every night, with booked DJs'],
     ['Your people', 'Whoever could make it', '20 hand-picked people who love the same music'],
     ['First time?', 'Work it out as you go', 'Hosts who have partied in Goa since 2020'],
     ['Safety', "You're on your own", 'A sober host every night and a female point of contact'],
@@ -178,12 +178,12 @@ export const promises = [
   'A female point of contact for every woman in the crew.',
   'Our cars only. Nobody rides back alone at night.',
   'Drug-free trips. We never provide or support drugs.',
-  "House parties with permission, outdoor music ending at 10 pm as Goa's rules require.",
+  "Parties with permission. After 10 pm the music moves indoors, as Goa's rules require.",
   'Full terms in writing before you pay a rupee.',
 ];
 
 export const faqs = [
-  { q: 'What exactly do I get for ₹84,000?', a: 'Five nights (4–9 Feb) in a luxury villa with a private pool, your Hilltop Festival Weekend 2 pass, a private cook for all meals, house parties and after-parties with booked DJs, cars all trip plus airport pickup and drop, a photographer, the Mooncrew welcome kit, and both hosts the whole time.' },
+  { q: 'What exactly do I get for ₹84,000?', a: 'Five nights (4–9 Feb) in a luxury villa with a private pool, your Hilltop Festival Weekend 2 pass, a private cook for all meals, a private after-party at the villa after each of the four Hilltop nights, a pool party with booked DJs on 8 Feb, cars all trip plus airport pickup and drop, a photographer, the Mooncrew welcome kit, and both hosts the whole time.' },
   { q: "I've never been to a rave. Is this for me?", a: 'Yes. Many of our guests come for their first time. We brief you before the trip, you are never on your own, and one of us stays sober every night.' },
   { q: 'Can I come alone?', a: "Yes, and plenty of people do. The crew meets in a WhatsApp group before the trip, and we match room partners. Want a private room? Ask us, and we'll confirm availability and the extra cost." },
   { q: 'Where is the villa?', a: 'In Anjuna, Vagator or Assagao, 10 to 15 minutes from Hilltop. We share the exact villa with confirmed guests.' },
